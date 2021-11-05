@@ -10,13 +10,6 @@ public class Algorithm {
         expressions = new Vector<String>();
     }
 
-    public void show_all_Expression(){
-        System.out.println(expressions.size());
-        for(String exp:expressions){
-            System.out.println(exp);
-        }
-    }
-
     public void calcualte(ArrayList<Integer>array,int target,String expression) {
         String s;
         if(array.size()==1){
@@ -88,6 +81,8 @@ public class Algorithm {
         else
             return false;
     }
+
+
 
     public static void main(String[] args) {
 

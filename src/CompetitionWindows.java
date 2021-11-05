@@ -83,7 +83,7 @@ public class CompetitionWindows extends JFrame {
         {
             public void actionPerformed (ActionEvent evt)
             {
-                nowtime -= 1;
+//                nowtime -= 1; --zwp
                 label4.setText(String.valueOf(nowtime));
                 if(nowtime<0){
                     //进入最后画面
@@ -252,10 +252,14 @@ public class CompetitionWindows extends JFrame {
             if(e.getSource()==OperateButton5){
                 s+="(";
                 textfield.setText(s);
+                OperateButton5.setEnabled(false);
+                OperateButton6.setEnabled(true);
             }
             if(e.getSource()==OperateButton6){
                 s+=")";
                 textfield.setText(s);
+                OperateButton6.setEnabled(false);
+                OperateButton5.setEnabled(true);
             }
         }
     }
@@ -283,7 +287,7 @@ public class CompetitionWindows extends JFrame {
                     OperateButton4.addActionListener(new OperateEvent());
                     OperateButton5.addActionListener(new OperateEvent());
                     OperateButton6.addActionListener(new OperateEvent());
-
+                    OperateButton6.setEnabled(false);
                     timer.start();
                 }
                 String textforButton = GameButton1.getText();
@@ -306,6 +310,7 @@ public class CompetitionWindows extends JFrame {
                 GameButton1.setEnabled(true); //需要更改成自己的计算算法-zwp
                 GameButton2.setEnabled(false);
                 String str=textfield.getText();
+
                 int len=str.length();
                 StringBuffer sb= new StringBuffer(s);
                 for(int i=0;i<sb.length();i++){
@@ -412,8 +417,10 @@ public class CompetitionWindows extends JFrame {
                 }catch(Exception ee){}
                 //提交之后自动进入下一个题目
                 setThread();
+
                 GameButton1.setText("暂停");
                 thread.start();
+                s="";
             }
             if(e.getSource()==GameButton3){
                 s="";
@@ -445,7 +452,6 @@ public class CompetitionWindows extends JFrame {
     }
 
     //需要建立一个utils类
-
     int icp(char ch){
         switch(ch){
             case '#':return 0;
