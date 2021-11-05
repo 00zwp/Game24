@@ -65,9 +65,11 @@ public class Algorithm {
     }
 
     public boolean check(int[] initNums,int[] temp,double num){
+
         for (int i = 0; i < initNums.length; i++) {
             if (temp[i]==0) {//之所以加上temp的限制，是避免元素本身和自己做运算
                 temp[i] = 1;
+                System.out.println(num);
                 if (check(initNums, temp,num + initNums[i])
                         || check(initNums,temp ,num - initNums[i])
                         || check(initNums,temp ,num * initNums[i])
@@ -82,10 +84,9 @@ public class Algorithm {
             return false;
     }
 
-
-
     public static void main(String[] args) {
-
+        int[] x ={11,3,1,2};
+        System.out.println(new Algorithm().check(x,new int[]{0,0,0,0},0.0));
     }
 }
 

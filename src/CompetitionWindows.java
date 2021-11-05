@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.http.WebSocket;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 import javax.swing.JButton;
@@ -24,13 +25,15 @@ public class CompetitionWindows extends JFrame {
     public String s="";
     public int[] endarray = new int[]{0,0,0,0};
     public int[] numarray =new int[]{0,0,0,0};
-
+    public int a,b,c,d;
+    public Algorithm algorithm;
 
     public CompetitionWindows() {}
     // Button 数字 GameButton 游戏操作  OperateButton +
 
     public CompetitionWindows(Game24 firstgame) {
         this.firstgame = firstgame;
+        algorithm = new Algorithm();
         this.initWindows();
     }
 
@@ -216,22 +219,22 @@ public class CompetitionWindows extends JFrame {
             if (backupkey==0)
             {   backupkey=1;
                 if (e.getSource() == Button1) {
-                    s += "" + a;
+                    s += "" + endarray[0];
                     textfield.setText(s);
                     Button1.setEnabled(false);
                 }
                 if (e.getSource() == Button2) {
-                    s += "" + b;
+                    s += "" + endarray[1];
                     textfield.setText(s);
                     Button2.setEnabled(false);
                 }
                 if (e.getSource() == Button3) {
-                    s += "" + c;
+                    s += "" + endarray[2];
                     textfield.setText(s);
                     Button3.setEnabled(false);
                 }
                 if (e.getSource() == Button4) {
-                    s += "" + d;
+                    s += "" + endarray[3];
                     textfield.setText(s);
                     Button4.setEnabled(false);
                 }//需要和操作符添加互斥
@@ -307,6 +310,7 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setText("暂停");
                     thread.start();
                     GameButton2.setEnabled(false);
+                    GameButton3.setEnabled(false);
                 }
                 else if(textforButton=="暂停")
                 {
@@ -314,12 +318,24 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setText("开始");
                     GameButton1.setEnabled(false);
                     GameButton2.setEnabled(true);
+                    GameButton3.setEnabled(true);
                 }
             }
             if(e.getSource()==GameButton2){
                 //-zwp 要判断是否为24
                 GameButton1.setEnabled(true); //需要更改成自己的计算算法-zwp
                 GameButton2.setEnabled(false);
+                GameButton3.setEnabled(true);
+                Button1.setEnabled(true);
+                Button2.setEnabled(true);
+                Button3.setEnabled(true);
+                Button4.setEnabled(true);
+
+                GameButton1.setText("暂停");
+                s="";
+                setThread();
+                thread.start();
+
                 String str=textfield.getText();
 
                 int len=str.length();
@@ -427,11 +443,7 @@ public class CompetitionWindows extends JFrame {
                         textfield.setText("  (＞﹏＜)");}
                 }catch(Exception ee){}
                 //提交之后自动进入下一个题目
-                setThread();
 
-                GameButton1.setText("暂停");
-                thread.start();
-                s="";
             }
             if(e.getSource()==GameButton3){
                 s="";
@@ -443,21 +455,16 @@ public class CompetitionWindows extends JFrame {
             }
             if(e.getSource()==GameButton4){
                 //-zwp
-                int op1,op2,op3;
-                for(op1=1;op1<=4;op1++)
-                    for(op2=1;op2<=4;op2++)
-                        for(op3=1;op3<=4;op3++){
-                            if(calculate_model1(a,b,c,d,op1,op2,op3)==24)
-                                System.out.println("(("+a+showFuHao(op1)+b+")"+showFuHao(op2)+c+")"+showFuHao(op3)+d); /*对应表达式类型：((A□B)□C)□D*/
-                            if(calculate_model2(a,b,c,d,op1,op2,op3)==24)
-                                System.out.println("("+a+showFuHao(op1)+"("+b+showFuHao(op2)+c+")"+")"+showFuHao(op3)+d);/*对应表达式类型：(A□(B□C))□D */
-                            if(calculate_model3(a,b,c,d,op1,op2,op3)==24)
-                                System.out.println(a+showFuHao(op1)+"("+b+showFuHao(op2)+"("+c+showFuHao(op3)+d+"))");/*对应表达式类型：A□(B□(C□D))*/
-                            if(calculate_model4(a,b,c,d,op1,op2,op3)==24)
-                                System.out.println(a+showFuHao(op1)+"(("+b+showFuHao(op2)+c+")"+showFuHao(op3)+d+")");/*对应表达式类型：A□((B□C)□D)*/
-                            if(calculate_model5(a,b,c,d,op1,op2,op3)==24)
-                                System.out.println("("+a+showFuHao(op1)+b+")"+showFuHao(op2)+"("+c+showFuHao(op3)+d+")");/*对应表达式类型：(A□B)□(C□D)*/
-                        }
+                ArrayList<Integer> array = new ArrayList<Integer>();
+                if (!algorithm.check(endarray, new int[]{0,0,0,0}, 0.0)){
+                    String timetext = "这组数字没有24点，可以直接提交o";
+                    textfield.setText(timetext);
+                }
+                else {
+                    for(int i=0;i<4;i++){array.add(endarray[i]);}
+                    algorithm.calcualte(array,24,"");
+                    textfield.setText(algorithm.expressions.get(0));
+                }
             }
         }
     }
@@ -565,14 +572,6 @@ public class CompetitionWindows extends JFrame {
         else return false;
     }
 
-    public float calculate_model1(float i,float j,float k,float t,int op1,int op2,int op3){
-        float r1,r2,r3;                                           /*对应表达式类型：((A□B)□C)□D*/
-        r1 = cal(i,j,op1);
-        r2 = cal(r1,k,op2);
-        r3 = cal(r2,t,op3);
-        return r3;
-    }
-
     public  float cal(float x,float y,int op){                               //计算两个操作数
         switch(op){
             case 1:return x+y;
@@ -582,47 +581,6 @@ public class CompetitionWindows extends JFrame {
         }
         return 0;
     }
-
-    public float calculate_model2(float i,float j,float k,float t,int op1,int op2,int op3){
-        float r1,r2,r3;                                         /*对应表达式类型：(A□(B□C))□D */
-        r1 = cal(j,k,op2);
-        r2 = cal(i,r1,op1);
-        r3 = cal(r2,t,op3);
-        return r3;
-    }
-
-    public float calculate_model3(float i,float j,float k,float t,int op1,int op2,int op3){
-        float r1,r2,r3;                                     /*对应表达式类型：A□(B□(C□D))*/
-        r1 = cal(k,t,op3);
-        r2 = cal(j,r1,op2);
-        r3 = cal(i,r2,op1);
-        return r3;
-    }
-
-    public float calculate_model4(float i,float j,float k,float t,int op1,int op2,int op3){
-        float r1,r2,r3;                                         /*对应表达式类型：A□((B□C)□D)*/
-        r1 = cal(j,k,op2);
-        r2 = cal(r1,t,op3);
-        r3 = cal(i,r2,op1);
-        return r3;
-    }
-
-    public float calculate_model5(float i,float j,float k,float t,int op1,int op2,int op3){
-        float r1,r2,r3;                                            /*对应表达式类型：(A□B)□(C□D)*/
-        r1 = cal(i,j,op1);
-        r2 = cal(k,t,op3);
-        r3 = cal(r1,r2,op2);
-        return r3;
-    }
-
-    String showFuHao(int op){
-        switch(op){
-            case 1:return "+";
-            case 2:return "-";
-            case 3:return "*";
-            case 4:return "/";
-        }
-        return "";}
 
     public static void main(String []args)
     {
