@@ -17,14 +17,22 @@ public class CompetitionWindows extends JFrame {
     private JTextField textfield;
     private Thread thread;
     private Boolean isClicked;
-    public String s="";
-    public int a,b,c,d;
+    private int backupkey = 0;
     public JLabel label, label1, label2, label3, label4, labelscore; //label 提示label ， label1-4 时间生命
     private Timer timer;
     private Game24 firstgame;
+    public String s="";
+    public int[] endarray = new int[]{0,0,0,0};
+    public int[] numarray =new int[]{0,0,0,0};
+
 
     public CompetitionWindows() {}
     // Button 数字 GameButton 游戏操作  OperateButton +
+
+    public CompetitionWindows(Game24 firstgame) {
+        this.firstgame = firstgame;
+        this.initWindows();
+    }
 
     public void initWindows()  {
         this.setLayout(null);
@@ -34,10 +42,11 @@ public class CompetitionWindows extends JFrame {
 
         //添加数字图片按钮
         this.addnumButton();
-        this.addoperateBuntton();
-        this.addgameButton();
-        this.addText();
-        this.addActionall();
+        this.addoperateBuntton(); // 添加操作符号的按钮
+        this.addgameButton();   //添加游戏程序基本按钮
+        this.addText(); //添加文本编辑框
+        this.addActionall(); //将Button1激活后，在Button1的激活中加入其他按钮激活。
+
         //设置时间控件
         this.addlabel();
 
@@ -48,73 +57,9 @@ public class CompetitionWindows extends JFrame {
                 firstgame.show_initial_windows();
             }
         });
+
         this.setResizable(false);
     }//初始化各种控件
-
-    private void addlabel() {
-        // label 调整时间生命值的见监听器
-        label = new JLabel("欢迎来到24点的闯关模式,努力直到耗尽一切吧！");
-        label1 = new JLabel("目前生命值：");
-        label2 = new JLabel(String.valueOf(life));
-        label3 = new JLabel("剩余时间：");
-        label4 = new JLabel(String.valueOf(nowtime));
-
-        label.setBounds(10,10,700,50);
-        label1.setBounds(50,50,200,50);
-        label2.setBounds(235,50,100,50);
-        label3.setBounds(500,50,200,50);
-        label4.setBounds(650,50,100,50);
-
-        Font font = new Font("楷体",Font.BOLD,26);
-        label.setFont(font);
-        label1.setFont(font);
-        label2.setFont(font);
-        label3.setFont(font);
-        label4.setFont(font);
-
-        this.add(label);
-        this.add(label1);
-        this.add(label2);
-        this.add(label3);
-        this.add(label4);
-
-        int delay=1000;
-        ActionListener taskPerformer=new ActionListener()
-        {
-            public void actionPerformed (ActionEvent evt)
-            {
-//                nowtime -= 1; --zwp
-                label4.setText(String.valueOf(nowtime));
-                if(nowtime<0){
-                    //进入最后画面
-                    getEndWindows();
-                    timer.stop();
-                }
-            }
-        };
-        timer = new Timer(delay,taskPerformer);
-
-        lifeBar = new JProgressBar();
-        lifeBar.setOrientation(JProgressBar.HORIZONTAL);
-        lifeBar.setMaximum(100);
-        lifeBar.setMinimum(0);
-        lifeBar.setValue(100);
-        lifeBar.setBounds(280,60,200,30);
-        lifeBar.setBorderPainted(true);
-        lifeBar.setBackground(Color.blue);
-        lifeBar.setForeground(Color.red);
-        lifeBar.setVisible(true);
-        this.add(lifeBar);
-
-        labelscore = new JLabel("目前得分："+score);
-        labelscore.setBounds(120,550,500,50);
-        labelscore.setFont(font);
-        this.add(labelscore);
-    }
-
-    public void addActionall() {
-        this.GameButton1.addActionListener(new gameEvent());
-    }
 
     public void addnumButton() {// 1-new 对象，2-设置位置，3-填充图片， 4-监听事件(由于一开始图片未显示，需要在开始按钮后添加监听)
         this.Button1 =new JButton();
@@ -201,62 +146,128 @@ public class CompetitionWindows extends JFrame {
         this.add(this.textfield);
     }
 
-    public CompetitionWindows(Game24 firstgame) {
-        this.firstgame = firstgame;
-        this.initWindows();
+    public void addActionall() {
+        this.GameButton1.addActionListener(new gameEvent());
+    }
+
+    private void addlabel() {
+        // label 调整时间生命值的见监听器
+        label = new JLabel("欢迎来到24点的闯关模式,努力直到耗尽一切吧！");
+        label1 = new JLabel("目前生命值：");
+        label2 = new JLabel(String.valueOf(life));
+        label3 = new JLabel("剩余时间：");
+        label4 = new JLabel(String.valueOf(nowtime));
+
+        label.setBounds(10,10,700,50);
+        label1.setBounds(50,50,200,50);
+        label2.setBounds(235,50,100,50);
+        label3.setBounds(500,50,200,50);
+        label4.setBounds(650,50,100,50);
+
+        Font font = new Font("楷体",Font.BOLD,26);
+        label.setFont(font);
+        label1.setFont(font);
+        label2.setFont(font);
+        label3.setFont(font);
+        label4.setFont(font);
+
+        this.add(label);
+        this.add(label1);
+        this.add(label2);
+        this.add(label3);
+        this.add(label4);
+
+        int delay=1000;
+        ActionListener taskPerformer=new ActionListener()
+        {
+            public void actionPerformed (ActionEvent evt)
+            {
+//                nowtime -= 1; --zwp
+                label4.setText(String.valueOf(nowtime));
+                if(nowtime<0){
+                    //进入最后画面
+                    getEndWindows();
+                    timer.stop();
+                }
+            }
+        };
+        timer = new Timer(delay,taskPerformer);
+
+        lifeBar = new JProgressBar();
+        lifeBar.setOrientation(JProgressBar.HORIZONTAL);
+        lifeBar.setMaximum(100);
+        lifeBar.setMinimum(0);
+        lifeBar.setValue(100);
+        lifeBar.setBounds(280,60,200,30);
+        lifeBar.setBorderPainted(true);
+        lifeBar.setBackground(Color.blue);
+        lifeBar.setForeground(Color.red);
+        lifeBar.setVisible(true);
+        this.add(lifeBar);
+
+        labelscore = new JLabel("目前得分："+score);
+        labelscore.setBounds(120,550,500,50);
+        labelscore.setFont(font);
+        this.add(labelscore);
     }
 
     class ButtonEvent implements ActionListener {                     //定义牌按钮的监视器类
         public void actionPerformed(ActionEvent e){
-            if(e.getSource()==Button1){
-                s+=""+a;
-                textfield.setText(s);
-                Button1.setEnabled(false);
-            }
-            if(e.getSource()==Button2){
-                s+=""+b;
-                textfield.setText(s);
-                Button2.setEnabled(false);
-            }
-            if(e.getSource()==Button3){
-                s+=""+c;
-                textfield.setText(s);
-                Button3.setEnabled(false);
-            }
-            if(e.getSource()==Button4){
-                s+=""+d;
-                textfield.setText(s);
-                Button4.setEnabled(false);
+            if (backupkey==0)
+            {   backupkey=1;
+                if (e.getSource() == Button1) {
+                    s += "" + a;
+                    textfield.setText(s);
+                    Button1.setEnabled(false);
+                }
+                if (e.getSource() == Button2) {
+                    s += "" + b;
+                    textfield.setText(s);
+                    Button2.setEnabled(false);
+                }
+                if (e.getSource() == Button3) {
+                    s += "" + c;
+                    textfield.setText(s);
+                    Button3.setEnabled(false);
+                }
+                if (e.getSource() == Button4) {
+                    s += "" + d;
+                    textfield.setText(s);
+                    Button4.setEnabled(false);
+                }//需要和操作符添加互斥
             }
         }
     }
 
     class OperateEvent implements ActionListener {
         public void actionPerformed(ActionEvent e){
-            if(e.getSource()==OperateButton1){
-                s+="+";
-                textfield.setText(s);
+            if(backupkey==1)
+            {   backupkey=0;
+                if (e.getSource() == OperateButton1) {
+                    s += "+";
+                    textfield.setText(s);
+                }
+                if (e.getSource() == OperateButton2) {
+                    s += "-";
+                    textfield.setText(s);
+                }
+                if (e.getSource() == OperateButton3) {
+                    s += "*";
+                    textfield.setText(s);
+                }
+                if (e.getSource() == OperateButton4) {
+                    s += "/";
+                    textfield.setText(s);
+                }
             }
-            if(e.getSource()==OperateButton2){
-                s+="-";
-                textfield.setText(s);
-            }
-            if(e.getSource()==OperateButton3){
-                s+="*";
-                textfield.setText(s);
-            }
-            if(e.getSource()==OperateButton4){
-                s+="/";
-                textfield.setText(s);
-            }
-            if(e.getSource()==OperateButton5){
-                s+="(";
+            if (e.getSource() == OperateButton5) {
+                s += "(";
                 textfield.setText(s);
                 OperateButton5.setEnabled(false);
                 OperateButton6.setEnabled(true);
             }
-            if(e.getSource()==OperateButton6){
-                s+=")";
+            if (e.getSource() == OperateButton6) {
+                s += ")";
                 textfield.setText(s);
                 OperateButton6.setEnabled(false);
                 OperateButton5.setEnabled(true);
@@ -451,6 +462,69 @@ public class CompetitionWindows extends JFrame {
         }
     }
 
+    public void getEndWindows(){
+        this.removeAll();
+        Graphics g = this.getGraphics();
+        final ImageIcon bgImageIcon = new ImageIcon("./imgs/loss.PNG");
+        final Image image = bgImageIcon.getImage();
+        g.drawImage(image,0,0,this.getWidth(),this.getHeight(),null);
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                firstgame.show_initial_windows();
+                dispose();
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+    }
+
+    public void setThread() {this.thread = new Thread(new Runnable(){
+        public void run(){
+            int x = 0;
+            isClicked=false;
+            while(isClicked==false){
+                try{
+                    thread.sleep(2);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                for(int i=0;i<4;i++) {
+                    x = new Random().nextInt(10)+1;
+                    numarray[i] = x ;
+                }
+                setButtonIcon(numarray[0],numarray[1],numarray[2],numarray[3]);
+                if(isClicked==true){
+                    endarray=numarray.clone();
+                    return ;
+                }
+            }
+        }
+    }
+    );
+    }
+
+    public void setButtonIcon(int i,int j,int k,int t){
+        String aPath="./imgs/number_img/"+i+".JPG";
+        String bPath="./imgs/number_img/"+j+".JPG";
+        String cPath="./imgs/number_img/"+k+".JPG";
+        String dPath="./imgs/number_img/"+t+".JPG";
+        Button1.setIcon(new ImageIcon(aPath));
+        Button2.setIcon(new ImageIcon(bPath));
+        Button3.setIcon(new ImageIcon(cPath));
+        Button4.setIcon(new ImageIcon(dPath));
+    }
+
     //需要建立一个utils类
     int icp(char ch){
         switch(ch){
@@ -549,72 +623,6 @@ public class CompetitionWindows extends JFrame {
             case 4:return "/";
         }
         return "";}
-
-    public void setThread() {this.thread = new Thread(new Runnable(){
-            public void run(){
-                isClicked=false;
-                while(isClicked==false){
-                    try{
-                        Thread.sleep(2);
-                        int a1,b1,c1,d1;
-                        a1=new Random().nextInt(11); //添加照片时需要修改的界限-zwp
-                        b1=new Random().nextInt(11);
-                        c1=new Random().nextInt(11);
-                        d1=new Random().nextInt(11);
-                        if(a1==0) a1++;
-                        if(b1==0) b1++;
-                        if(c1==0) c1++;
-                        if(d1==0) d1++;
-                        setButtonIcon(a1,b1,c1,d1);
-                        if(isClicked==true){
-                            a=a1; b=b1; c=c1; d=d1;
-                            return ;
-                        }
-                    }catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
-    public void getEndWindows(){
-        this.removeAll();
-        Graphics g = this.getGraphics();
-        final ImageIcon bgImageIcon = new ImageIcon("./imgs/loss.PNG");
-        final Image image = bgImageIcon.getImage();
-        g.drawImage(image,0,0,this.getWidth(),this.getHeight(),null);
-        this.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                firstgame.show_initial_windows();
-                dispose();
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-    }
-
-    public void setButtonIcon(int i,int j,int k,int t){
-        String aPath="./imgs/number_img/"+i+".JPG";
-        String bPath="./imgs/number_img/"+j+".JPG";
-        String cPath="./imgs/number_img/"+k+".JPG";
-        String dPath="./imgs/number_img/"+t+".JPG";
-        Button1.setIcon(new ImageIcon(aPath));
-        Button2.setIcon(new ImageIcon(bPath));
-        Button3.setIcon(new ImageIcon(cPath));
-        Button4.setIcon(new ImageIcon(dPath));
-    }
 
     public static void main(String []args)
     {
