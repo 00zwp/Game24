@@ -29,6 +29,7 @@ public class TestWindows extends JFrame {
 
 
     public void initWindows(){
+
         this.setLayout(null);
         this.setTitle("24点-练习模式");
         this.setBounds(300,50,600,500);
@@ -43,6 +44,13 @@ public class TestWindows extends JFrame {
         this.setTimer();
 
         this.setResizable(false);
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                firstgame.show_initial_windows();
+            }
+        });
     }
 
     private void setTimer() {
@@ -218,19 +226,12 @@ public class TestWindows extends JFrame {
 
     public TestWindows(Game24 firstgame) {
         this.firstgame = firstgame;
-        initWindows();
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                firstgame.show_initial_windows();
-            }
-        });
+        this.initWindows();
     }
 
     public static void main(String []args)
     {
-        new TestWindows().initWindows();
+        new TestWindows(new Game24()).initWindows();
     }
 
 }

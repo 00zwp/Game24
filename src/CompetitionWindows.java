@@ -1,13 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 import javax.swing.JButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class CompetitionWindows extends JFrame {
     public int count = 0, life = 100, nowtime = 60, score = 0; // i-用于记录提交次数
@@ -25,6 +22,7 @@ public class CompetitionWindows extends JFrame {
     public String s="";
     public int[] endarray = new int[]{0,0,0,0};
     public int[] numarray =new int[]{0,0,0,0};
+    public Font font ;
     public int a,b,c,d;
     public Algorithm algorithm;
 
@@ -32,6 +30,7 @@ public class CompetitionWindows extends JFrame {
     // Button 数字 GameButton 游戏操作  OperateButton +
 
     public CompetitionWindows(Game24 firstgame) {
+        this.font = new Font("宋体",Font.BOLD,100);
         this.firstgame = firstgame;
         algorithm = new Algorithm();
         this.initWindows();
@@ -144,9 +143,12 @@ public class CompetitionWindows extends JFrame {
         this.textfield.setOpaque(false);                             //设置文本框透明
         this.textfield.setEditable(false);                           //设置文本框不可编辑
         this.textfield.setBounds(100,350,620,100);
-        Font font = new Font("宋体",Font.BOLD,100);
-        this.textfield.setFont(font);
-        this.add(this.textfield);
+        this.textfield.setFont(this.font);
+
+        JScrollPane pane = new JScrollPane(this.textfield,ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER ,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        pane.setBounds(100,350,620,130);
+        this.getContentPane().add(pane);
+//        this.add(this.textfield);
     }
 
     public void addActionall() {
@@ -185,7 +187,7 @@ public class CompetitionWindows extends JFrame {
         {
             public void actionPerformed (ActionEvent evt)
             {
-//                nowtime -= 1; --zwp
+                nowtime -= 1; //--zwp
                 label4.setText(String.valueOf(nowtime));
                 if(nowtime<0){
                     //进入最后画面
@@ -447,6 +449,7 @@ public class CompetitionWindows extends JFrame {
             }
             if(e.getSource()==GameButton3){
                 s="";
+                backupkey=0;
                 textfield.setText(null);
                 Button1.setEnabled(true);
                 Button2.setEnabled(true);
@@ -455,6 +458,8 @@ public class CompetitionWindows extends JFrame {
             }
             if(e.getSource()==GameButton4){
                 //-zwp
+                s="";
+                textfield.setText(null);
                 ArrayList<Integer> array = new ArrayList<Integer>();
                 if (!algorithm.check(endarray, new int[]{0,0,0,0}, 0.0)){
                     String timetext = "这组数字没有24点，可以直接提交o";

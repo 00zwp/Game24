@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Game24:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Game24_jar</output-path>
+    <root id="archive" name="Game24.jar">
+      <element id="module-output" name="Game24" />
+    </root>
+  </artifact>
+</component>

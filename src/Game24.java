@@ -54,6 +54,8 @@ public class Game24 extends JFrame {
         this.ButtonThree.setIcon(new ImageIcon("./imgs/robot_2.PNG"));
 
         this.ButtonOne.addActionListener(new ButtonstartEvent());
+        this.ButtonTwo.addActionListener(new ButtonstartEvent());
+        this.ButtonThree.addActionListener(new ButtonstartEvent());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     //为了显示最初始化的界面
@@ -74,6 +76,7 @@ public class Game24 extends JFrame {
 
     class ButtonstartEvent implements ActionListener {                     //定义牌按钮的监视器类
         public void actionPerformed(ActionEvent e){
+            setVisible(false);
             if(e.getSource()== ButtonOne){
                 new CompetitionWindows(firstgame);
             }
@@ -81,9 +84,8 @@ public class Game24 extends JFrame {
                 new TestWindows(firstgame);
             }
             else if(e.getSource()== ButtonThree){
-                int i = 0;
+                new FunWindows(firstgame);
             }
-            setVisible(false);
         }
     }
 
