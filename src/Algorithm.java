@@ -232,6 +232,7 @@ public class Algorithm {
         int[] indexofoperate = this.getpriority(sign, this.signpriority,this.operatesign);
         return this.calculate_String(this.numbers,this.operatesign,indexofoperate,sign);
     }
+
     public static void main(String[] args) {
 //        Algorithm a = new Algorithm();
 //        String str = "3*2*1*4";

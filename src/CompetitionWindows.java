@@ -247,22 +247,26 @@ public class CompetitionWindows extends JFrame {
     class OperateEvent implements ActionListener {
         public void actionPerformed(ActionEvent e){
             if(backupkey==1)
-            {   backupkey=0;
+            {
                 if (e.getSource() == OperateButton1) {
                     s += "+";
                     textfield.setText(s);
+                    backupkey=0;
                 }
                 if (e.getSource() == OperateButton2) {
                     s += "-";
                     textfield.setText(s);
+                    backupkey=0;
                 }
                 if (e.getSource() == OperateButton3) {
                     s += "*";
                     textfield.setText(s);
+                    backupkey=0;
                 }
                 if (e.getSource() == OperateButton4) {
                     s += "/";
                     textfield.setText(s);
+                    backupkey=0;
                 }
             }
             if (e.getSource() == OperateButton5) {
@@ -328,6 +332,8 @@ public class CompetitionWindows extends JFrame {
                 GameButton1.setEnabled(true); //需要更改成自己的计算算法-zwp
                 GameButton2.setEnabled(false);
                 GameButton3.setEnabled(true);
+                OperateButton5.setEnabled(true);
+                OperateButton6.setEnabled(false);
                 Button1.setEnabled(true);
                 Button2.setEnabled(true);
                 Button3.setEnabled(true);
@@ -335,6 +341,7 @@ public class CompetitionWindows extends JFrame {
 
                 GameButton1.setText("暂停");
                 s="";
+                backupkey = 0;
                 setThread();
                 thread.start();
 
