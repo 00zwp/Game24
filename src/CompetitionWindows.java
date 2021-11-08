@@ -7,7 +7,7 @@ import java.util.Stack;
 import javax.swing.JButton;
 
 public class CompetitionWindows extends JFrame {
-    public int count = 0, life = 100, nowtime = 60, score = 0; // i-用于记录提交次数
+    public int count = 0, life = 100, nowtime = 200, score = 0; // i-用于记录提交次数
     private JButton Button1,Button2,Button3,Button4; //四个数字图片
     private JButton OperateButton1,OperateButton2,OperateButton3,OperateButton4,OperateButton5,OperateButton6;
     private JButton GameButton1,GameButton2,GameButton3,GameButton4;
@@ -34,7 +34,7 @@ public class CompetitionWindows extends JFrame {
         this.firstgame = firstgame;
         algorithm = new Algorithm();
         this.initWindows();
-        this.setBackground(Color.gray);
+        this.getContentPane().setBackground(Color.lightGray);
     }
 
     public void initWindows()  {
