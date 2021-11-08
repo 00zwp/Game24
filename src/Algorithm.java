@@ -74,7 +74,7 @@ public class Algorithm {
         for (int i = 0; i < initNums.length; i++) {
             if (temp[i]==0) {//之所以加上temp的限制，是避免元素本身和自己做运算
                 temp[i] = 1;
-                System.out.println(num);
+//                System.out.println(num);
                 if (check(initNums, temp,num + initNums[i])
                         || check(initNums,temp ,num - initNums[i])
                         || check(initNums,temp ,num * initNums[i])
@@ -114,12 +114,43 @@ public class Algorithm {
         return sign;
     }//将符号从字符串中提取
 
+    public boolean checkstringlegal(String expression){
+        if(expression.startsWith("...")){return false;}
+        char[] expressionchars = expression.toCharArray();
+        int sumnumber = 0;
+        int sumsign = 0;
+        for(int i=0;i<expressionchars.length;i++)
+        {
+            switch (expressionchars[i]){
+                case '(':
+                    if((sumnumber+sumsign)%2!=0) return false;
+                    sumnumber = 0;
+                    sumsign = 0;
+                    break;
+                case ')':
+                    if((sumnumber+sumsign)%2==0) return false;
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    sumsign ++;
+                    break;
+                default:
+                    sumnumber++;
+                    break;
+            }
+        }
+        return true;
+    }
+
     public int[] getpriority(String sign, int[] signpriority, int[] opratesign) {
         int bracketlevel = 0 ;
         int signlevel = 0;
         int labelnum = 0;
-        for(int i=0;i<this.chars.length;i++) {
-            switch (this.chars[i]){
+        char[] signchars = sign.toCharArray();
+        for(int i=0;i<signchars.length;i++) {
+            switch (signchars[i]){
                 case '(':
                     bracketlevel ++ ;
                     signpriority[i] = bracketlevel*10 + signlevel;
@@ -226,23 +257,20 @@ public class Algorithm {
     }
 
     public boolean checkString(String str){
+
+        if(str.equals("")) {return false;}
         String sign = this.getelementsfromString(str,this.numbers);
         this.chars = str.toCharArray();
         this.signpriority = new int[chars.length];
         int[] indexofoperate = this.getpriority(sign, this.signpriority,this.operatesign);
-        return this.calculate_String(this.numbers,this.operatesign,indexofoperate,sign);
+        Boolean b = this.calculate_String(this.numbers,this.operatesign,indexofoperate,sign);
+        return b;
     }
 
     public static void main(String[] args) {
-//        Algorithm a = new Algorithm();
-//        String str = "3*2*1*4";
-//        int[] numbers = new int[4];
-//        String sign = a.getelementsfromString(str,numbers);
-//        a.chars = str.toCharArray();
-//        int[] signpriority =new int [str.toCharArray().length];
-//        int[] operatesign = new int [3];
-//        int[] indexofoperate = a.getpriority(sign, signpriority, operatesign);
-//        System.out.println(a.calculate_String(numbers,operatesign,indexofoperate,sign));
+        Algorithm a = new Algorithm();
+        String str = "()3*2*1*4";
+        System.out.println(a.checkstringlegal(str));
     }
 }
 

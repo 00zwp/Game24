@@ -20,7 +20,7 @@ public class FunWindows extends JFrame{
 
         this.setVisible(true);
         this.setResizable(true);
-        x = new Random().nextInt(2)+1;
+        x = new Random().nextInt(19)+1;
         changeIcon(x,path);
         this.setTimer();
     }
@@ -44,7 +44,7 @@ public class FunWindows extends JFrame{
         int width = this.getWidth();
 
         Graphics g = this.getGraphics();
-        ImageIcon bgImageIcon = new ImageIcon(path+x+".PNG");
+        ImageIcon bgImageIcon = new ImageIcon(path+x+".JPG");
         Image image = bgImageIcon.getImage();
 
         g.drawImage(image, 0, 0, width, height, null);

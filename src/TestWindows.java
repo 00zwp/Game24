@@ -34,7 +34,7 @@ public class TestWindows extends JFrame {
         this.setTitle("24点-练习模式");
         this.setBounds(300,50,600,500);
         this.setVisible(true);
-
+        this.setBackground(Color.gray);
         //控件初始化
         this.addnumButton();
         this.addLabel();

@@ -34,6 +34,7 @@ public class CompetitionWindows extends JFrame {
         this.firstgame = firstgame;
         algorithm = new Algorithm();
         this.initWindows();
+        this.setBackground(Color.gray);
     }
 
     public void initWindows()  {
@@ -321,6 +322,8 @@ public class CompetitionWindows extends JFrame {
                 else if(textforButton=="暂停")
                 {
                     isClicked = true;
+                    s = "";
+                    textfield.setText(s);
                     GameButton1.setText("开始");
                     GameButton1.setEnabled(false);
                     GameButton2.setEnabled(true);
@@ -329,130 +332,62 @@ public class CompetitionWindows extends JFrame {
             }
             if(e.getSource()==GameButton2){
                 //-zwp 要判断是否为24
-                GameButton1.setEnabled(true); //需要更改成自己的计算算法-zwp
-                GameButton2.setEnabled(false);
-                GameButton3.setEnabled(true);
-                OperateButton5.setEnabled(true);
-                OperateButton6.setEnabled(false);
                 Button1.setEnabled(true);
                 Button2.setEnabled(true);
                 Button3.setEnabled(true);
                 Button4.setEnabled(true);
-
-                GameButton1.setText("暂停");
+                OperateButton5.setEnabled(true);
+                OperateButton6.setEnabled(false);
                 s="";
                 backupkey = 0;
-                setThread();
-                thread.start();
-
                 String str=textfield.getText();
 
-                int len=str.length();
-                StringBuffer sb= new StringBuffer(s);
-                for(int i=0;i<sb.length();i++){
-                    if(sb.charAt(i)=='1'){
-                        int j=i+1;
-                        if(j<sb.length()&&sb.charAt(j)=='0')
-                        {
-                            sb=sb.replace(i, j,"$");
-                            sb.deleteCharAt(j);
-                            i=0;
-                        }
-                    }
-                }
-                try{
-                    Stack<Character> ct=new Stack<Character>();
-                    Stack<Character> c1 = new Stack<Character>();
-                    Stack<Character> s1 = new Stack<Character>();
-                    ct.push(new Character('#'));
-                    for(int i=sb.length()-1;i>=0;i--)
-                        ct.push(new Character(sb.charAt(i)));
-                    s1.push(new Character('#'));
-                    char ch=ct.peek().charValue();
-                    char y;
-                    while(ch!='#'){
-                        if(isDigit(ch))
-                            c1.push(ct.peek().charValue());
-                        else if(ch==')')
-                            for(y=s1.peek().charValue(),s1.pop();y!='(';y=s1.peek().charValue(),s1.pop())
-                                c1.push(new Character(y));
-                        else{
-                            for(y=s1.peek().charValue(),s1.pop();icp(ch)<=isp(y);y=s1.peek().charValue(),s1.pop())
-                                c1.push(new Character(y));
-                            s1.push(new Character(y));
-                            s1.push(new Character(ch));
-                        }
-                        ct.pop();
-                        ch=ct.peek().charValue();
-                    }
-                    while(!s1.isEmpty()){
-                        y=s1.peek().charValue();
-                        s1.pop();
-                        if(y!='#')
-                            c1.push(new Character(y));
-                    }
-                    s1.push(new Character('#'));
-                    while(c1.isEmpty()==false){
-                        char temp=c1.peek().charValue();
-                        if(temp>='1'&&temp<='9')
-                            temp=(char)(temp-48);
-                        else if(temp=='$')
-                            temp=(char)(temp-26);
-                        s1.push(new Character(temp));
-                        c1.pop();
-                    }
-                    Stack<Character> re=new Stack<Character>();
+                if(!algorithm.checkstringlegal(str)) {
+                    textfield.setText("表达式不规范");
+                    score -= 1;
+                    labelscore.setText("目前得分："+score);
 
-                    char cha[]=new char[20];
-                    int i=0;
-                    while(s1.peek().charValue()!='#')
-                    {
-                        cha[i++]=s1.peek().charValue();
-                        s1.pop();
-                    }
-                    cha[i]='#';
-                    for(i=0;cha[i]!='#';){
-                        if(cha[i]=='+'){
-                            cha[i-2]=(char)(cha[i-1]+cha[i-2]);
-                            deletetwoElements(i-1,cha);
-                            i=0;
-                        }
-                        else if(cha[i]=='-'){
-                            cha[i-2]=(char)(cha[i-2]-cha[i-1]);
-                            deletetwoElements(i-1,cha);
-                            i=0;
-                        }
-                        else if(cha[i]=='*'){
-                            cha[i-2]=(char)(cha[i-1]*cha[i-2]);
-                            deletetwoElements(i-1,cha);
-                            i=0;
-                        }
-                        else if(cha[i]=='/'){
-                            cha[i-2]=(char)(cha[i-2]/cha[i-1]);
-                            deletetwoElements(i-1,cha);
-                            i=0;
-                        }
-                        else i++;
-                    }
-                    if((int)cha[0]==24){
-                        textfield.setText("   Y^o^Y   ");
-                        nowtime += 10 ;
-                        score += 10;
-                        labelscore.setText("目前得分："+score);
+                }
+                else{
+                    GameButton1.setEnabled(true);
+                    GameButton2.setEnabled(false);
+                    GameButton3.setEnabled(true);
+
+                    GameButton1.setText("暂停");
+                    setThread();
+                    thread.start();
+
+
+                    System.out.println(str.equals(""));
+                    System.out.println(algorithm.check(endarray, new int[]{0,0,0,0}, 0.0));
+                    if(str.equals("")&&!algorithm.check(endarray, new int[]{0,0,0,0}, 0.0)){
+                        nowtime+=20;
+                        score += 20;
+                        labelscore.setText("目前得分: "+score);
+                        count += 1;
+                        textfield.setText("  无解即正解  ");
                     }
                     else {
-                        life-= 5*count;
-                        lifeBar.setValue(life);
-                        label2.setText(Integer.toString(life));
-                        if(life<0){
-                            //进入最后界面
-                            getEndWindows();
+                        Boolean judgement = algorithm.checkString(str);
+                        if(judgement){
+                            textfield.setText("   Y^o^Y   ");
+                            nowtime += 10 ;
+                            score += 10;
+                            labelscore.setText("目前得分："+score);
                         }
-                        count += 1;
-                        textfield.setText("  (＞﹏＜)");}
-                }catch(Exception ee){}
-                //提交之后自动进入下一个题目
-
+                        else {
+                            life-= 5*count;
+                            lifeBar.setValue(life);
+                            label2.setText(Integer.toString(life));
+                            if(life<0){
+                                //进入最后界面
+                                getEndWindows();
+                            }
+                            count += 1;
+                            textfield.setText("  (＞﹏＜)");}
+                    }
+                    //提交之后自动进入下一个题目
+                }
             }
             if(e.getSource()==GameButton3){
                 s="";
@@ -519,7 +454,7 @@ public class CompetitionWindows extends JFrame {
                     e.printStackTrace();
                 }
                 for(int i=0;i<4;i++) {
-                    x = new Random().nextInt(10)+1;
+                    x = new Random().nextInt(12)+1;
                     numarray[i] = x ;
                 }
                 setButtonIcon(numarray[0],numarray[1],numarray[2],numarray[3]);
@@ -534,10 +469,10 @@ public class CompetitionWindows extends JFrame {
     }
 
     public void setButtonIcon(int i,int j,int k,int t){
-        String aPath="./imgs/number_img/"+i+".JPG";
-        String bPath="./imgs/number_img/"+j+".JPG";
-        String cPath="./imgs/number_img/"+k+".JPG";
-        String dPath="./imgs/number_img/"+t+".JPG";
+        String aPath="./imgs/number_img2/"+i+".PNG";
+        String bPath="./imgs/number_img2/"+j+".PNG";
+        String cPath="./imgs/number_img2/"+k+".PNG";
+        String dPath="./imgs/number_img2/"+t+".PNG";
         Button1.setIcon(new ImageIcon(aPath));
         Button2.setIcon(new ImageIcon(bPath));
         Button3.setIcon(new ImageIcon(cPath));

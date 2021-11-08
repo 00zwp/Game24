@@ -71,6 +71,7 @@ public class Game24 extends JFrame {
 
     public static void main(String[] args) {
         firstgame = new Game24();
+        firstgame.setBackground(Color.black);
         firstgame.show_initial_windows();
     }
 
