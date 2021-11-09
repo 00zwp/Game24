@@ -10,9 +10,12 @@ public class Algorithm {
     int[] signpriority;
     public Vector<String> expressions;
 
-
     public Algorithm(){
         expressions = new Vector<String>();
+    }
+
+    public void clearexpressions() {
+        this.expressions.clear();
     }
 
     public void calcualte(ArrayList<Integer>array,int target,String expression) {
@@ -22,7 +25,6 @@ public class Algorithm {
                 expressions.add(expression);
             }
         }
-
         else {
             for(int i=0;i<array.size();i++) {
                 for(int j=i+1;j<array.size();j++){
@@ -119,15 +121,18 @@ public class Algorithm {
         char[] expressionchars = expression.toCharArray();
         int sumnumber = 0;
         int sumsign = 0;
+        boolean checknumber = false;
         for(int i=0;i<expressionchars.length;i++)
         {
             switch (expressionchars[i]){
                 case '(':
+                    checknumber=false;
                     if((sumnumber+sumsign)%2!=0) return false;
                     sumnumber = 0;
                     sumsign = 0;
                     break;
                 case ')':
+                    checknumber=false;
                     if((sumnumber+sumsign)%2==0) return false;
                     break;
                 case '+':
@@ -135,9 +140,13 @@ public class Algorithm {
                 case '*':
                 case '/':
                     sumsign ++;
+                    checknumber=false;
                     break;
                 default:
-                    sumnumber++;
+                    if (checknumber==false){
+                        checknumber=true;
+                        sumnumber++;
+                    }
                     break;
             }
         }
@@ -219,7 +228,7 @@ public class Algorithm {
                 calnumber = cal(number[0],calnumber,chars[opratesign[0]]);
             }
             else {
-                calnumber = cal(calnumber,number[2],chars[opratesign[2]]);
+                calnumber = cal(calnumber,number[3],chars[opratesign[2]]);
             }
         }
         else if(index==indexofoperate[0]-1){
@@ -228,7 +237,7 @@ public class Algorithm {
                 calnumber = cal(number[0],calnumber,chars[opratesign[0]]);
             }
             else {
-                calnumber = cal(calnumber,number[2],chars[opratesign[2]]);
+                calnumber = cal(calnumber,number[3],chars[opratesign[2]]);
             }
         }
         else
@@ -260,6 +269,7 @@ public class Algorithm {
 
         if(str.equals("")) {return false;}
         String sign = this.getelementsfromString(str,this.numbers);
+        System.out.println(sign.replaceAll("\\(|\\)", ""));
         this.chars = str.toCharArray();
         this.signpriority = new int[chars.length];
         int[] indexofoperate = this.getpriority(sign, this.signpriority,this.operatesign);
@@ -269,8 +279,8 @@ public class Algorithm {
 
     public static void main(String[] args) {
         Algorithm a = new Algorithm();
-        String str = "()3*2*1*4";
-        System.out.println(a.checkstringlegal(str));
+        String str = "(11-3)*9/3";
+        System.out.println(a.checkString(str));
     }
 }
 

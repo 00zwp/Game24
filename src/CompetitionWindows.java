@@ -328,14 +328,18 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setEnabled(false);
                     GameButton2.setEnabled(true);
                     GameButton3.setEnabled(true);
+                    Button1.setEnabled(true);
+                    Button2.setEnabled(true);
+                    Button3.setEnabled(true);
+                    Button4.setEnabled(true);
                 }
             }
             if(e.getSource()==GameButton2){
                 //-zwp 要判断是否为24
-                Button1.setEnabled(true);
-                Button2.setEnabled(true);
-                Button3.setEnabled(true);
-                Button4.setEnabled(true);
+                Button1.setEnabled(false);
+                Button2.setEnabled(false);
+                Button3.setEnabled(false);
+                Button4.setEnabled(false);
                 OperateButton5.setEnabled(true);
                 OperateButton6.setEnabled(false);
                 s="";
@@ -344,6 +348,10 @@ public class CompetitionWindows extends JFrame {
 
                 if(!algorithm.checkstringlegal(str)) {
                     textfield.setText("表达式不规范");
+                    Button1.setEnabled(true);
+                    Button2.setEnabled(true);
+                    Button3.setEnabled(true);
+                    Button4.setEnabled(true);
                     score -= 1;
                     labelscore.setText("目前得分："+score);
 
@@ -356,7 +364,6 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setText("暂停");
                     setThread();
                     thread.start();
-
 
                     System.out.println(str.equals(""));
                     System.out.println(algorithm.check(endarray, new int[]{0,0,0,0}, 0.0));
@@ -400,6 +407,7 @@ public class CompetitionWindows extends JFrame {
             }
             if(e.getSource()==GameButton4){
                 //-zwp
+                algorithm.clearexpressions();
                 s="";
                 textfield.setText(null);
                 ArrayList<Integer> array = new ArrayList<Integer>();
