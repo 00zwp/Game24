@@ -328,6 +328,7 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setEnabled(false);
                     GameButton2.setEnabled(true);
                     GameButton3.setEnabled(true);
+                    GameButton4.setEnabled(true);
                     Button1.setEnabled(true);
                     Button2.setEnabled(true);
                     Button3.setEnabled(true);
@@ -360,7 +361,7 @@ public class CompetitionWindows extends JFrame {
                     GameButton1.setEnabled(true);
                     GameButton2.setEnabled(false);
                     GameButton3.setEnabled(true);
-
+                    GameButton4.setEnabled(true);
                     GameButton1.setText("暂停");
                     setThread();
                     thread.start();
@@ -488,54 +489,6 @@ public class CompetitionWindows extends JFrame {
     }
 
     //需要建立一个utils类
-    int icp(char ch){
-        switch(ch){
-            case '#':return 0;
-            case '(':return 7;
-            case '*':
-            case '/':return 4;
-            case '+':
-            case '-':return 2;
-            case ')':return 1;
-        }
-        return 0;
-    }
-
-    int isp(char ch){
-        switch(ch){
-            case '#':return 0;
-            case '(':return 1;
-            case '*':
-            case '/':return 5;
-            case '+':
-            case '-':return 3;
-            case ')':return 7;
-        }
-        return 0;
-    }
-
-    void deletetwoElements(int i,char cha[]){
-        for(int j=i;j<cha.length-2;j++){
-            cha[j]=cha[j+2];
-        }
-    }
-
-    boolean isDigit(char ch){
-        char c=ch;
-        if(c>='0'&&c<='9'||c=='$')
-            return true;
-        else return false;
-    }
-
-    public  float cal(float x,float y,int op){                               //计算两个操作数
-        switch(op){
-            case 1:return x+y;
-            case 2:return x-y;
-            case 3:return x*y;
-            case 4:return x/y;
-        }
-        return 0;
-    }
 
     public static void main(String []args)
     {

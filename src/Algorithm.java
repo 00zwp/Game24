@@ -155,7 +155,7 @@ public class Algorithm {
 
     public int[] getpriority(String sign, int[] signpriority, int[] opratesign) {
         int bracketlevel = 0 ;
-        int signlevel = 0;
+        int signlevel = 4;
         int labelnum = 0;
         char[] signchars = sign.toCharArray();
         for(int i=0;i<signchars.length;i++) {
@@ -170,10 +170,12 @@ public class Algorithm {
                     break;
                 case '*':
                 case '/':
+                    signlevel -= 1;
                     signpriority[i] = bracketlevel*10 + signlevel +1;
                     opratesign[labelnum++] = i ;
                     break;
                 default:
+                    signlevel -= 1;
                     signpriority[i] = bracketlevel*10 + signlevel ;
                     opratesign[labelnum++] = i ;
                     break;
@@ -252,7 +254,6 @@ public class Algorithm {
             }
         }
         return calnumber==24.0;
-
     }
 
     public  double cal(double x,double y,char op){                               //计算两个操作数
@@ -279,7 +280,7 @@ public class Algorithm {
 
     public static void main(String[] args) {
         Algorithm a = new Algorithm();
-        String str = "(11-3)*9/3";
+        String str = "(12-6)*4*1";
         System.out.println(a.checkString(str));
     }
 }
